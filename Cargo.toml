@@ -1,0 +1,17 @@
+[package]
+name = "twitimer"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+egg-mode = "0.16"
+futures = "0.3.21"
+tokio = { version = "1.19.2", features = ["full"] }
+args = "2.0"
+getopts = "0.2.21"
+chrono = "0.4.19"
+rusqlite = "0.27.0"
+regex = "1.5"
+scopeguard = "1.1.0"
