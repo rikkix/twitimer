@@ -11,10 +11,10 @@ pub fn structure(conn: &rusqlite::Connection) -> rusqlite::Result<usize> {
         "\
     CREATE TABLE tasks (\
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \
-        begin_at INTEGER NOT NULL, \
+        begin_at TEXT NOT NULL, \
         begin_done INTEGER NOT NULL, \
         tweet_id INTEGER,\
-        end_at INTEGER, \
+        end_at TEXT, \
         end_done INTEGER NOT NULL, \
         draft TEXT NOT NULL\
     );",

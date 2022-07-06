@@ -1,5 +1,8 @@
 use crate::db::query::config;
+use chrono::Utc;
 use rusqlite;
+use rusqlite::types::ToSqlOutput;
+use rusqlite::ToSql;
 use std::path;
 
 pub mod init;
@@ -24,6 +27,9 @@ pub fn exist() -> bool {
 }
 
 pub fn check_available() -> bool {
+    if !exist() {
+        return false;
+    }
     let conn = new_conn();
     if let Err(_) = conn {
         return false;

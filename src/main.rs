@@ -1,3 +1,5 @@
+extern crate core;
+
 mod cli;
 mod db;
 mod err;
@@ -111,7 +113,7 @@ const PROGRAM_CRON_DESC: &str = "Check for actions";
 
 const TWITIMER_VER: &str = "v0.0.1(dev)";
 
-fn main() -> io::Result<()> {
+fn main() -> Result<(), err::Error> {
     let program_args: Vec<String> = env::args().collect();
     let program_args: Vec<&str> = program_args.iter().map(|s| s.as_str()).collect();
 
@@ -176,8 +178,8 @@ fn main() -> io::Result<()> {
                 println!("Use `$ twitimer init` to initialize one");
                 exit(-3)
             }
-
-            // TODO
+            println!("twitimer init --update is still under development!");
+            // TODO: update
             return Ok(());
         }
 
@@ -186,12 +188,34 @@ fn main() -> io::Result<()> {
             println!("use `$ twitimer init --update` to upgrade configurations!");
             exit(-1)
         }
-        cli::init::init_db_cli(&args).expect("Error when running `$ twitimer init`");
+        cli::init::init_handler(&args).expect("Error when running `$ twitimer init`");
         return Ok(());
     }
 
+    if !db_exist {
+        println!("db not exist!");
+        println!("execute `$ twitimer init` to create a new one!");
+        exit(-1)
+    }
+
+    let conn = db::new_conn().expect("Error when establish connection to database");
+
     // $ twitimer new
     if program_args[1].eq("new") {
+        let mut args = cli::new_args();
+        args.parse(&program_args)
+            .expect("Error when parsing program arguments");
+
+        // $ twitimer new --help
+        if args
+            .value_of("help")
+            .expect("Error when getting the value of flag help")
+        {
+            println!("{}", args.usage());
+            return Ok(());
+        }
+
+        cli::new::new_handler(&conn, &args)?;
         return Ok(());
     }
 

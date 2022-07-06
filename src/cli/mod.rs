@@ -1,4 +1,5 @@
 pub mod init;
+pub mod new;
 
 use crate::{utils, PROGRAM_CRON_DESC, TWITIMER_VER};
 use crate::{
@@ -84,7 +85,7 @@ pub fn new_args() -> args::Args {
         "m",
         "message",
         "Your message content",
-        "TWEET",
+        "\"Hello, world!\\n你好\\nこんにちは 👋\"",
         Occur::Optional,
         None,
     );
@@ -92,14 +93,14 @@ pub fn new_args() -> args::Args {
         "s",
         "start",
         "The start time of your tweet",
-        "START",
+        "\"2022-02-12 13:23:45 +8\" or UNIX_TIMESTAMP",
         Occur::Optional,
         None,
     );
     args.option(
         "e",
         "end",
-        "The end time of your tweet",
+        "\"2022-02-12 13:23:45 +0\" or UNIX_TIMESTAMP or \"None\"",
         "END",
         Occur::Optional,
         None,
@@ -116,7 +117,7 @@ pub fn new_args() -> args::Args {
         "",
         "import",
         "Import from json file (More in README.md)",
-        "FILE_NAME",
+        "filename.json",
         Occur::Optional,
         None,
     );
@@ -151,8 +152,8 @@ pub fn list_args() -> args::Args {
     args.option(
         "o",
         "output",
-        "Save to file",
-        "FILE_NAME",
+        "Save to file as json",
+        "filename.json",
         Occur::Optional,
         None,
     );
@@ -188,7 +189,7 @@ pub fn edit_args() -> args::Args {
         "m",
         "message",
         "The message that you want to changed to",
-        "MESSAGE",
+        "\"Have a nice sleep!\\n晚安\\nおやすみなさい 😴\"",
         Occur::Optional,
         None,
     );
@@ -196,7 +197,7 @@ pub fn edit_args() -> args::Args {
         "s",
         "start",
         "The start time that you want to changed to",
-        "START",
+        "\"2022-02-12 13:23:45 +9\" or UNIX_TIMESTAMP",
         Occur::Optional,
         None,
     );
@@ -204,7 +205,7 @@ pub fn edit_args() -> args::Args {
         "e",
         "end",
         "The end time that you want to changed to",
-        "END",
+        "\"2022-02-12 13:23:45 -1\" or UNIX_TIMESTAMP",
         Occur::Optional,
         None,
     );
