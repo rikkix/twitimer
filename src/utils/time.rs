@@ -2,9 +2,19 @@ use crate::err;
 use chrono::{TimeZone, Utc};
 use rusqlite::types::ToSqlOutput;
 use rusqlite::ToSql;
-use std::cmp::min;
+use std::ops::Add;
 
 const HOUR_AS_SEC: i32 = 60 * 60;
+
+const HOUR_AS_MIN: i64 = 60;
+
+pub struct SqlTimestamp(pub chrono::DateTime<Utc>);
+
+impl ToSql for SqlTimestamp {
+    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
+        Ok(ToSqlOutput::from(self.0.timestamp()))
+    }
+}
 
 pub fn parse_date_time_ts(s: &String) -> Result<chrono::DateTime<Utc>, err::Error> {
     let ts = s.parse::<i64>();
@@ -17,8 +27,66 @@ pub fn parse_date_time_ts(s: &String) -> Result<chrono::DateTime<Utc>, err::Erro
     Ok(Utc.timestamp(ts.unwrap(), 0))
 }
 
+pub fn parse_date_time_now_plus(s: &String) -> Result<chrono::DateTime<Utc>, err::Error> {
+    let s = s.trim_start_matches("now");
+
+    let dur_hour: i64;
+    let dur_minute: i64;
+
+    let r1 = regex::Regex::new(r"(\d+)h").expect("Error when creating regex pattern");
+    let c1 = r1.captures(s);
+    if c1.is_none() {
+        dur_hour = 0;
+    } else {
+        let c1 = c1.unwrap().get(1);
+        if c1.is_none() {
+            dur_hour = 0;
+        } else {
+            let h = c1.unwrap().as_str().parse::<i64>();
+            if h.is_err() {
+                return Err(err::Error::new(
+                    Some(11),
+                    "Unable to parse dur_hour(string) to int".to_string(),
+                ));
+            }
+            dur_hour = h.unwrap();
+        }
+    }
+
+    let r2 = regex::Regex::new(r"(\d+)m").expect("Error when creating regex pattern");
+    let c2 = r2.captures(s);
+    if c2.is_none() {
+        dur_minute = 0;
+    } else {
+        let c2 = c2.unwrap().get(1);
+        if c2.is_none() {
+            dur_minute = 0;
+        } else {
+            let m = c2.unwrap().as_str().parse::<i64>();
+            if m.is_err() {
+                return Err(err::Error::new(
+                    Some(11),
+                    "Unable to parse dur_minute(string) to int".to_string(),
+                ));
+            }
+            dur_minute = m.unwrap();
+        }
+    }
+
+    Ok(Utc::now().add(chrono::Duration::minutes(
+        dur_hour * HOUR_AS_MIN + dur_minute,
+    )))
+}
+
+// "now+3h", "now+3h20m", "now+20m"
+// TIME_STAMP
+// 2022-02-12 13:23:45 +9
 pub fn parse_date_time(s: &String) -> Result<chrono::DateTime<Utc>, err::Error> {
     let s = s.trim().to_string();
+
+    if s.starts_with("now") {
+        return parse_date_time_now_plus(&s);
+    }
 
     // try to parse as unix timestamp
     let ts_result = parse_date_time_ts(&s);

@@ -1,4 +1,6 @@
+use crate::utils::time::SqlTimestamp;
 use crate::{Config, Twitimer};
+use getopts::HasArg::No;
 use rusqlite::params;
 
 pub fn table_config(conn: &rusqlite::Connection, k: &str, v: &String) -> rusqlite::Result<usize> {
@@ -19,12 +21,18 @@ pub fn config(conn: &rusqlite::Connection, conf: &Config) -> rusqlite::Result<()
 }
 
 pub fn task(conn: &rusqlite::Connection, task: &Twitimer) -> rusqlite::Result<usize> {
+    let end_at: Option<SqlTimestamp>;
+    if task.end_at.is_none() {
+        end_at = None;
+    } else {
+        end_at = Some(SqlTimestamp(task.end_at.unwrap()));
+    }
     conn.execute(
         "INSERT INTO tasks (begin_at, begin_done, end_at, end_done, draft) VALUES (?1, ?2, ?3, ?4, ?5);",
         params![
-            &task.begin_at,
+            &SqlTimestamp(task.begin_at),
             &task.begin_done,
-            &task.end_at,
+            &end_at,
             &task.end_done,
             &task.draft
         ],
