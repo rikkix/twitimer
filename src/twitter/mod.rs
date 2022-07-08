@@ -24,7 +24,7 @@ impl Credential {
         Ok(resp.response.id)
     }
 
-    pub fn delete(&mut self, tweet_id: u64) -> Result<(), err::Error> {
+    pub fn delete(&self, tweet_id: u64) -> Result<(), err::Error> {
         tokio::runtime::Runtime::new()
             .unwrap()
             .block_on(egg_mode::tweet::delete(tweet_id, &self.token()))?;

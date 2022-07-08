@@ -217,6 +217,20 @@ fn main() -> Result<(), err::Error> {
 
     // $ twitimer cron
     if program_args[1].eq("cron") {
+        let mut args = cli::cron_args();
+        args.parse(&program_args)
+            .expect("Error when parsing program arguments");
+
+        // $ twitimer cron --help
+        if args
+            .value_of("help")
+            .expect("Error when getting the value of flag help")
+        {
+            println!("{}", args.usage());
+            return Ok(());
+        }
+
+        cli::cron::handler(&conn, &args)?;
         return Ok(());
     }
 

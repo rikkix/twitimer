@@ -9,6 +9,7 @@ pub mod init;
 pub mod insert;
 pub mod query;
 pub mod remove;
+pub mod update;
 
 pub const DB_PATH: &str = {
     let s = option_env!("TWITIMER_DB");
