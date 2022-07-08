@@ -4,7 +4,7 @@ use rusqlite;
 use scopeguard::defer;
 use std::io;
 
-pub fn init_handler(args: &args::Args) -> Result<(), Error> {
+pub fn handler(args: &args::Args) -> Result<(), Error> {
     let silent = args
         .value_of("silent")
         .expect("Error when getting value of program argument silent");

@@ -7,6 +7,7 @@ mod utils;
 mod version;
 
 use chrono::{Local, Utc};
+use std::ops::Index;
 use std::process::exit;
 use std::time::Instant;
 use std::{env, io, path, result};
@@ -14,8 +15,10 @@ use std::{env, io, path, result};
 use crate::db::DB_PATH;
 use crate::err::Error;
 use egg_mode::tweet;
+use prettytable::{cell, row};
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Twitimer {
     id: u32,
     begin_at: chrono::DateTime<Utc>,
@@ -25,6 +28,30 @@ pub struct Twitimer {
     end_done: bool,
     draft: String,
     // note: String,
+}
+
+impl Twitimer {
+    fn to_table_row(&self) -> prettytable::Row {
+        let tweet_id_str = if self.tweet_id.is_none() {
+            "/".to_string()
+        } else {
+            self.tweet_id.unwrap().to_string()
+        };
+        let end_at_str = if self.end_at.is_none() {
+            "/".to_string()
+        } else {
+            self.end_at.unwrap().to_string()
+        };
+        row![
+            self.id.to_string(),
+            self.begin_at.to_string(),
+            self.begin_done.to_string(),
+            tweet_id_str,
+            end_at_str,
+            self.end_done.to_string(),
+            self.draft.clone()
+        ]
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -108,7 +135,7 @@ const PROGRAM_NAME: &str = "twitimer";
 const PROGRAM_INIT_DESC: &str = "Init or update twitimer configuration";
 const PROGRAM_NEW_DESC: &str = "Create a new twitimer task";
 const PROGRAM_LIST_DESC: &str = "List your twitimer task(s)";
-const PROGRAM_EDIT_DESC: &str = "Edit your twitimer task";
+const PROGRAM_REMOVE_DESC: &str = "Remove your twitimer task(s)";
 const PROGRAM_CRON_DESC: &str = "Check for actions";
 
 const TWITIMER_VER: &str = "v0.0.1(dev)";
@@ -188,7 +215,7 @@ fn main() -> Result<(), err::Error> {
             println!("use `$ twitimer init --update` to upgrade configurations!");
             exit(-1)
         }
-        cli::init::init_handler(&args).expect("Error when running `$ twitimer init`");
+        cli::init::handler(&args).expect("Error when running `$ twitimer init`");
         return Ok(());
     }
 
@@ -215,12 +242,26 @@ fn main() -> Result<(), err::Error> {
             return Ok(());
         }
 
-        cli::new::new_handler(&conn, &args)?;
+        cli::new::handler(&conn, &args)?;
         return Ok(());
     }
 
     // $ twitimer list
     if program_args[1].eq("list") {
+        let mut args = cli::list_args();
+        args.parse(&program_args)
+            .expect("Error when parsing program arguments");
+
+        // $ twitimer list --help
+        if args
+            .value_of("help")
+            .expect("Error when getting the value of flag help")
+        {
+            println!("{}", args.usage());
+            return Ok(());
+        }
+
+        cli::list::handler(&conn, &args)?;
         return Ok(());
     }
 

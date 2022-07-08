@@ -1,3 +1,4 @@
+pub mod id;
 pub mod stdiotools;
 pub mod str;
 pub mod time;

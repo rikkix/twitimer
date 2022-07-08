@@ -1,5 +1,8 @@
+use crate::utils::time::SqlTimestamp;
 use crate::version::{Version, VersionStore};
-use crate::{Config, Credential, Error};
+use crate::{Config, Credential, Error, Twitimer};
+use chrono::{TimeZone, Utc};
+use itertools::Itertools;
 use rusqlite::params;
 
 pub fn table_config(conn: &rusqlite::Connection, key: &str) -> rusqlite::Result<String> {
@@ -22,4 +25,76 @@ pub fn config(conn: &rusqlite::Connection) -> Result<Config, Error> {
         version,
         credential: cred,
     })
+}
+
+pub fn all_tasks(conn: &rusqlite::Connection) -> rusqlite::Result<Vec<Twitimer>> {
+    let mut stmt = conn.prepare(
+        "SELECT id, begin_at, begin_done, tweet_id, end_at, end_done, draft FROM tasks;",
+    )?;
+
+    let mut rows = stmt.query([])?;
+    let mut result: Vec<Twitimer> = Vec::new();
+    while let row = rows.next()? {
+        if row.is_none() {
+            break;
+        }
+        let row = row.unwrap();
+
+        let end_at: Option<chrono::DateTime<Utc>>;
+        let end: Option<SqlTimestamp> = row.get(4)?;
+        if end.is_none() {
+            end_at = None
+        } else {
+            end_at = Some(end.unwrap().0);
+        }
+
+        result.push(Twitimer {
+            id: row.get(0)?,
+            begin_at: Utc.timestamp(row.get(1)?, 0),
+            begin_done: row.get(2)?,
+            tweet_id: row.get(3)?,
+            end_at,
+            end_done: row.get(5)?,
+            draft: row.get(6)?,
+        })
+    }
+    Ok(result)
+}
+
+pub fn tasks(conn: &rusqlite::Connection, ids: Vec<u32>) -> rusqlite::Result<Vec<Twitimer>> {
+    // hack
+    let mut stmt = conn.prepare(
+        format!(
+            "SELECT id, begin_at, begin_done, tweet_id, end_at, end_done, draft FROM tasks WHERE id IN ({});", 
+                Itertools::join(&mut ids.iter(), ",")
+        ).as_str()
+    )?;
+
+    let mut rows = stmt.query([])?;
+    let mut result: Vec<Twitimer> = Vec::new();
+    while let row = rows.next()? {
+        if row.is_none() {
+            break;
+        }
+        let row = row.unwrap();
+
+        let end_at: Option<chrono::DateTime<Utc>>;
+        let end: Option<SqlTimestamp> = row.get(4)?;
+        if end.is_none() {
+            end_at = None
+        } else {
+            end_at = Some(end.unwrap().0);
+        }
+
+        result.push(Twitimer {
+            id: row.get(0)?,
+            begin_at: Utc.timestamp(row.get(1)?, 0),
+            begin_done: row.get(2)?,
+            tweet_id: row.get(3)?,
+            end_at,
+            end_done: row.get(5)?,
+            draft: row.get(6)?,
+        })
+    }
+    Ok(result)
 }

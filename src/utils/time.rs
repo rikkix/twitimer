@@ -1,6 +1,6 @@
 use crate::err;
 use chrono::{TimeZone, Utc};
-use rusqlite::types::ToSqlOutput;
+use rusqlite::types::{FromSql, FromSqlResult, ToSqlOutput, ValueRef};
 use rusqlite::ToSql;
 use std::ops::Add;
 
@@ -13,6 +13,12 @@ pub struct SqlTimestamp(pub chrono::DateTime<Utc>);
 impl ToSql for SqlTimestamp {
     fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
         Ok(ToSqlOutput::from(self.0.timestamp()))
+    }
+}
+
+impl FromSql for SqlTimestamp {
+    fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
+        Ok(SqlTimestamp(Utc.timestamp(value.as_i64()?, 0)))
     }
 }
 

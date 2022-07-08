@@ -1,10 +1,10 @@
 pub mod init;
+pub mod list;
 pub mod new;
+pub mod remove;
 
-use crate::{utils, PROGRAM_CRON_DESC, TWITIMER_VER};
-use crate::{
-    PROGRAM_EDIT_DESC, PROGRAM_INIT_DESC, PROGRAM_LIST_DESC, PROGRAM_NAME, PROGRAM_NEW_DESC,
-};
+use crate::{utils, PROGRAM_CRON_DESC, PROGRAM_REMOVE_DESC, TWITIMER_VER};
+use crate::{PROGRAM_INIT_DESC, PROGRAM_LIST_DESC, PROGRAM_NAME, PROGRAM_NEW_DESC};
 use args;
 use getopts::Occur;
 use std::io;
@@ -130,8 +130,7 @@ pub fn list_args() -> args::Args {
         PROGRAM_LIST_DESC,
     );
     args.flag("h", "help", "Print the help page");
-    args.flag("s", "silent", "Select all y/n choices as default");
-    args.flag("", "no-msg", "Do not list message column");
+    // args.flag("", "no-msg", "Do not list message column");
     args.flag("j", "json", "Print or save as json");
     args.option(
         "i",
@@ -141,14 +140,14 @@ pub fn list_args() -> args::Args {
         Occur::Optional,
         None,
     );
-    args.option(
-        "m",
-        "max",
-        "The maximum tasks that will be listed",
-        "MAX",
-        Occur::Optional,
-        None,
-    );
+    // args.option(
+    //     "m",
+    //     "max",
+    //     "The maximum tasks that will be listed (decreased id)",
+    //     "MAX",
+    //     Occur::Optional,
+    //     None,
+    // );
     args.option(
         "o",
         "output",
@@ -168,55 +167,22 @@ pub fn list_args() -> args::Args {
     args
 }
 
-pub fn edit_args() -> args::Args {
+pub fn remove_args() -> args::Args {
     let mut args = args::Args::new(
-        utils::str::str_join(PROGRAM_NAME, "edit").as_str(),
-        PROGRAM_EDIT_DESC,
+        utils::str::str_join(PROGRAM_NAME, "remove").as_str(),
+        PROGRAM_REMOVE_DESC,
     );
     args.flag("h", "help", "Print the help page");
-    args.flag("s", "silent", "Select all y/n choices as default");
     args.flag("", "ignore", "Ignore warnings and handle as default");
     args.flag("r", "rm", "Remove task from twitimer");
     args.option(
         "i",
         "id",
-        "Your task id (single)",
-        "ID",
-        Occur::Optional,
+        "Your task id(s)",
+        "12 or 1,3,7 or 1-88 or 1,3,5,7-11",
+        Occur::Req,
         None,
     );
-    args.option(
-        "m",
-        "message",
-        "The message that you want to changed to",
-        "\"Have a nice sleep!\\n晚安\\nおやすみなさい 😴\"",
-        Occur::Optional,
-        None,
-    );
-    args.option(
-        "s",
-        "start",
-        "The start time that you want to changed to",
-        "\"2022-02-12 13:23:45 +9\" or UNIX_TIMESTAMP",
-        Occur::Optional,
-        None,
-    );
-    args.option(
-        "e",
-        "end",
-        "The end time that you want to changed to",
-        "\"2022-02-12 13:23:45 -1\" or UNIX_TIMESTAMP",
-        Occur::Optional,
-        None,
-    );
-    // args.option(
-    //     "n",
-    //     "note",
-    //     "The note that you want to changed to",
-    //     "NOTE",
-    //     Occur::Optional,
-    //     None,
-    // );
     args
 }
 

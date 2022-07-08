@@ -8,7 +8,7 @@ use std::io::{stdin, Read};
 
 const TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S %:z";
 
-pub fn new_handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err::Error> {
+pub fn handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err::Error> {
     let silent = args
         .value_of("silent")
         .expect("Error when getting value of program argument silent");
@@ -51,7 +51,7 @@ pub fn new_handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(),
     let correct = stdiotools::yes_or_no("Is is correct?", Some(true), silent);
     if !correct {
         println!("==================================================");
-        return new_handler(conn, args);
+        return handler(conn, args);
     }
 
     let (start, end) = start_end_cli(args, silent)?;
