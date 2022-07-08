@@ -1,5 +1,6 @@
+use crate::twitter::CredentialOpt;
 use crate::utils::stdiotools::{ask_correct, clear_terminal, yes_or_no};
-use crate::{db, version, Config, CredentialOpt, Error, TWITIMER_VER};
+use crate::{db, version, Config, Error, TWITIMER_VER};
 use rusqlite;
 use scopeguard::defer;
 use std::io;
@@ -39,7 +40,7 @@ pub fn handler(args: &args::Args) -> Result<(), Error> {
 
     let cred = cred_opt.to_credential()?;
 
-    println!("{}:    {},", "Consumer Key", cred.consumer_key);
+    println!("{}:    {},", "Consumer Key", cred.consumer_secret);
     println!("{}: {},", "Consumer Secret", cred.consumer_secret);
     println!("{}:      {},", "Access Key", cred.access_key);
     println!("{}:   {},", "Access Secret", cred.access_secret);

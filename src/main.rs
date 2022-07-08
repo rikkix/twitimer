@@ -3,6 +3,7 @@ extern crate core;
 mod cli;
 mod db;
 mod err;
+mod twitter;
 mod utils;
 mod version;
 
@@ -17,6 +18,7 @@ use crate::err::Error;
 use egg_mode::tweet;
 use prettytable::{cell, row};
 use serde::{Deserialize, Serialize};
+use twitter::Credential;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Twitimer {
@@ -55,80 +57,9 @@ impl Twitimer {
 }
 
 #[derive(Clone, Debug)]
-pub struct Credential {
-    consumer_key: String,
-    consumer_secret: String,
-    access_key: String,
-    access_secret: String,
-}
-
-#[derive(Clone, Debug)]
 pub struct Config {
     version: version::Version,
     credential: Credential,
-}
-
-impl Credential {
-    fn check_empty(&self) -> Result<(), Error> {
-        if self.consumer_key.is_empty() {
-            return Err(Error::new(None, "consumer_key is empty".to_string()));
-        }
-        if self.consumer_secret.is_empty() {
-            return Err(Error::new(None, "consumer_secret is empty".to_string()));
-        }
-        if self.access_key.is_empty() {
-            return Err(Error::new(None, "access_key is empty".to_string()));
-        }
-        if self.access_secret.is_empty() {
-            return Err(Error::new(None, "access_secret is empty".to_string()));
-        }
-        Ok(())
-    }
-}
-
-#[derive(Clone)]
-pub struct CredentialOpt {
-    consumer_key: Option<String>,
-    consumer_secret: Option<String>,
-    access_key: Option<String>,
-    access_secret: Option<String>,
-}
-
-impl CredentialOpt {
-    fn to_credential(self) -> Result<Credential, Error> {
-        if self.consumer_key.is_none() {
-            return Err(Error::new(
-                None,
-                "Unable to convert CredentialOpt to Credential: consumer_key is none".to_string(),
-            ));
-        }
-        if self.consumer_secret.is_none() {
-            return Err(Error::new(
-                None,
-                "Unable to convert CredentialOpt to Credential: consumer_secret is none"
-                    .to_string(),
-            ));
-        }
-        if self.access_key.is_none() {
-            return Err(Error::new(
-                None,
-                "Unable to convert CredentialOpt to Credential: access_key is none".to_string(),
-            ));
-        }
-        if self.access_secret.is_none() {
-            return Err(Error::new(
-                None,
-                "Unable to convert CredentialOpt to Credential: access_secret is none".to_string(),
-            ));
-        }
-
-        Ok(Credential {
-            consumer_key: self.consumer_key.unwrap(),
-            consumer_secret: self.consumer_secret.unwrap(),
-            access_key: self.access_key.unwrap(),
-            access_secret: self.access_secret.unwrap(),
-        })
-    }
 }
 
 const PROGRAM_NAME: &str = "twitimer";
@@ -157,7 +88,7 @@ fn main() -> Result<(), err::Error> {
         || sub.eq("init")
         || sub.eq("new")
         || sub.eq("list")
-        || sub.eq("edit")
+        || sub.eq("remove")
         || sub.eq("cron"))
     {
         cli::print_help();
@@ -265,8 +196,22 @@ fn main() -> Result<(), err::Error> {
         return Ok(());
     }
 
-    // $ twitimer edit
-    if program_args[1].eq("edit") {
+    // $ twitimer remove
+    if program_args[1].eq("remove") {
+        let mut args = cli::remove_args();
+        args.parse(&program_args)
+            .expect("Error when parsing program arguments");
+
+        // $ twitimer remove --help
+        if args
+            .value_of("help")
+            .expect("Error when getting the value of flag help")
+        {
+            println!("{}", args.usage());
+            return Ok(());
+        }
+
+        cli::remove::handler(&conn, &args)?;
         return Ok(());
     }
 

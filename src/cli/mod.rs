@@ -1,3 +1,4 @@
+pub mod cron;
 pub mod init;
 pub mod list;
 pub mod new;
@@ -174,13 +175,12 @@ pub fn remove_args() -> args::Args {
     );
     args.flag("h", "help", "Print the help page");
     args.flag("", "ignore", "Ignore warnings and handle as default");
-    args.flag("r", "rm", "Remove task from twitimer");
     args.option(
         "i",
         "id",
         "Your task id(s)",
         "12 or 1,3,7 or 1-88 or 1,3,5,7-11",
-        Occur::Req,
+        Occur::Optional,
         None,
     );
     args
@@ -192,5 +192,6 @@ pub fn cron_args() -> args::Args {
         PROGRAM_CRON_DESC,
     );
     args.flag("h", "help", "Print the help page");
+    args.flag("", "remove", "Remove after end done");
     args
 }

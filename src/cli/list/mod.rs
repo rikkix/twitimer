@@ -17,7 +17,7 @@ pub fn handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err
 
     let mut tasks: Vec<Twitimer> = Vec::new();
     if ids.is_some() {
-        tasks = db::query::tasks(conn, id::parse_list(ids.unwrap().as_str()))?;
+        tasks = db::query::tasks(conn, &id::parse_list(ids.unwrap().as_str()))?;
     } else {
         tasks = db::query::all_tasks(conn)?;
     }
@@ -39,21 +39,25 @@ pub fn handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err
             .expect("Error when writing file");
         }
     } else {
-        let mut table = prettytable::Table::new();
-        table.add_row(row![
-            "ID",
-            "Start At",
-            "Start Done",
-            "Tweet ID",
-            "End At",
-            "End Done",
-            "Draft"
-        ]);
-        for task in tasks {
-            table.add_row(task.to_table_row());
-        }
-        table.printstd();
+        print(tasks);
     }
 
     Ok(())
+}
+
+pub fn print(tasks: Vec<Twitimer>) {
+    let mut table = prettytable::Table::new();
+    table.add_row(row![
+        "ID",
+        "Start At",
+        "Start Done",
+        "Tweet ID",
+        "End At",
+        "End Done",
+        "Draft"
+    ]);
+    for task in tasks {
+        table.add_row(task.to_table_row());
+    }
+    table.printstd();
 }

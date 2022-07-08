@@ -32,6 +32,15 @@ impl From<ParseIntError> for Error {
     }
 }
 
+impl From<egg_mode::error::Error> for Error {
+    fn from(e: egg_mode::error::Error) -> Self {
+        Error {
+            code: Some(32),
+            msg: format!("Egg mode Error: {:#?}", e),
+        }
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.code {
