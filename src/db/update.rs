@@ -2,7 +2,7 @@ use rusqlite::params;
 
 pub fn start_done(conn: &rusqlite::Connection, id: u32) -> rusqlite::Result<()> {
     conn.execute(
-        "UPDATE tasks SET start_done = 1 WHERE id == ?1 ",
+        "UPDATE tasks SET begin_done = 1 WHERE id == ?1 ",
         params![id],
     )?;
     Ok(())
