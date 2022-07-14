@@ -8,8 +8,6 @@ use crate::{utils, PROGRAM_CRON_DESC, PROGRAM_REMOVE_DESC, TWITIMER_VER};
 use crate::{PROGRAM_INIT_DESC, PROGRAM_LIST_DESC, PROGRAM_NAME, PROGRAM_NEW_DESC};
 use args;
 use getopts::Occur;
-use std::io;
-use std::io::{BufRead, Write};
 
 pub fn print_help() {
     println!(

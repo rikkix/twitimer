@@ -1,6 +1,5 @@
 use crate::err;
-use egg_mode::tweet::Tweet;
-use egg_mode::{KeyPair, Response};
+use egg_mode::KeyPair;
 
 #[derive(Clone, Debug)]
 pub struct Credential {

@@ -7,15 +7,11 @@ mod twitter;
 mod utils;
 mod version;
 
-use chrono::{Local, Utc};
-use std::ops::Index;
+use chrono::Utc;
+use std::env;
 use std::process::exit;
-use std::time::Instant;
-use std::{env, io, path, result};
 
-use crate::db::DB_PATH;
 use crate::err::Error;
-use egg_mode::tweet;
 use prettytable::{cell, row};
 use serde::{Deserialize, Serialize};
 use twitter::Credential;

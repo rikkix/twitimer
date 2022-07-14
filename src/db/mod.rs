@@ -1,8 +1,5 @@
 use crate::db::query::config;
-use chrono::Utc;
 use rusqlite;
-use rusqlite::types::ToSqlOutput;
-use rusqlite::ToSql;
 use std::path;
 
 pub mod init;

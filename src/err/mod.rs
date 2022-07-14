@@ -1,4 +1,3 @@
-use std::convert::Infallible;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::num::ParseIntError;

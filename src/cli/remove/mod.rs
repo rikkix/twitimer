@@ -1,7 +1,6 @@
 use crate::utils::id;
 use crate::utils::stdiotools::yes_or_no;
 use crate::{cli, db, err};
-use getopts::HasArg::No;
 use std::process::exit;
 
 pub fn handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err::Error> {

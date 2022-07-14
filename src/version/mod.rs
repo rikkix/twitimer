@@ -1,4 +1,3 @@
-use crate::err::Error;
 use regex::Regex;
 
 #[derive(Clone, Debug)]

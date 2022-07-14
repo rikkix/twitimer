@@ -1,9 +1,6 @@
 use crate::twitter::CredentialOpt;
 use crate::utils::stdiotools::{ask_correct, clear_terminal, yes_or_no};
 use crate::{db, version, Config, Error, TWITIMER_VER};
-use rusqlite;
-use scopeguard::defer;
-use std::io;
 
 pub fn handler(args: &args::Args, exist: bool) -> Result<(), Error> {
     let silent = args

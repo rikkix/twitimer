@@ -1,6 +1,5 @@
 use crate::utils::time::SqlTimestamp;
 use crate::{Config, Twitimer};
-use getopts::HasArg::No;
 use rusqlite::params;
 
 pub fn table_config(conn: &rusqlite::Connection, k: &str, v: &String) -> rusqlite::Result<usize> {

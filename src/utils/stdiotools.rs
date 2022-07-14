@@ -1,4 +1,4 @@
-use std::io::{self, BufRead, Read, Write};
+use std::io::{self, BufRead, Write};
 
 pub fn yes_or_no(prompt: &str, default: Option<bool>, silent: bool) -> bool {
     if silent && default.is_some() {
@@ -80,11 +80,11 @@ pub fn clear_terminal() {
     print!("\x1B[2J\x1B[1;1H");
 }
 
-fn get_string(prompt: &str) -> Result<String, io::Error> {
-    print!("{}", prompt);
-    io::stdout().flush()?;
-    let mut buf = String::new();
-    io::stdin().lock().read_line(&mut buf)?;
-    let buf = buf.trim().to_string();
-    Ok(buf)
-}
+// fn get_string(prompt: &str) -> Result<String, io::Error> {
+//     print!("{}", prompt);
+//     io::stdout().flush()?;
+//     let mut buf = String::new();
+//     io::stdin().lock().read_line(&mut buf)?;
+//     let buf = buf.trim().to_string();
+//     Ok(buf)
+// }

@@ -1,6 +1,6 @@
 use crate::twitter::Credential;
 use crate::utils::time::SqlTimestamp;
-use crate::version::{Version, VersionStore};
+use crate::version::Version;
 use crate::{Config, Error, Twitimer};
 use chrono::{TimeZone, Utc};
 use itertools::Itertools;
@@ -34,7 +34,8 @@ pub fn all_tasks(conn: &rusqlite::Connection) -> rusqlite::Result<Vec<Twitimer>>
 
     let mut rows = stmt.query([])?;
     let mut result: Vec<Twitimer> = Vec::new();
-    while let row = rows.next()? {
+    loop {
+        let row = rows.next()?;
         if row.is_none() {
             break;
         }
@@ -96,7 +97,8 @@ pub fn tasks_to_end(conn: &rusqlite::Connection) -> rusqlite::Result<Vec<Twitime
 
 fn parse_rows_to_vec_twitimer(rows: &mut Rows) -> rusqlite::Result<Vec<Twitimer>> {
     let mut result: Vec<Twitimer> = Vec::new();
-    while let row = rows.next()? {
+    loop {
+        let row = rows.next()?;
         if row.is_none() {
             break;
         }

@@ -1,8 +1,8 @@
 use crate::utils::stdiotools;
-use crate::utils::stdiotools::{ask_correct, yes_or_no};
+use crate::utils::stdiotools::yes_or_no;
 use crate::utils::time::parse_date_time;
 use crate::utils::time_cli::ask_for_date_time;
-use crate::{cli, db, err, Twitimer};
+use crate::{db, err, Twitimer};
 use chrono::Utc;
 use std::io::{stdin, Read};
 
@@ -13,7 +13,7 @@ pub fn handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err
         .value_of("silent")
         .expect("Error when getting value of program argument silent");
 
-    let mut draft = String::new();
+    let mut draft: String;
 
     let msg: Option<String> = args
         .optional_value_of("message")

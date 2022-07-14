@@ -15,7 +15,7 @@ pub fn handler(conn: &rusqlite::Connection, args: &args::Args) -> Result<(), err
         .optional_value_of::<String>("output")
         .expect("Error when getting value of program argument output");
 
-    let mut tasks: Vec<Twitimer> = Vec::new();
+    let tasks: Vec<Twitimer>;
     if ids.is_some() {
         tasks = db::query::tasks(conn, &id::parse_list(ids.unwrap().as_str()))?;
     } else {
