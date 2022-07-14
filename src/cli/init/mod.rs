@@ -5,7 +5,7 @@ use rusqlite;
 use scopeguard::defer;
 use std::io;
 
-pub fn handler(args: &args::Args) -> Result<(), Error> {
+pub fn handler(args: &args::Args, exist: bool) -> Result<(), Error> {
     let silent = args
         .value_of("silent")
         .expect("Error when getting value of program argument silent");
@@ -52,15 +52,17 @@ pub fn handler(args: &args::Args) -> Result<(), Error> {
     println!("Great! Please wait while preparing the database...");
 
     let conn = db::new_conn().expect("Error when creating a new database");
-    db::init::structure(&conn).expect("Error when initialize database structure");
+    if !exist {
+        db::init::structure(&conn).expect("Error when initialize database structure");
+    }
 
     let conf = Config {
         version: version::Version::from(TWITIMER_VER).expect("Error when parsing TWITIMER_VER"),
         credential: cred,
     };
 
-    db::insert::config(&conn, &conf).expect("Error when writing config to database");
-    println!("Successfully initialized!");
+    db::insert::config(&conn, &conf).expect("Error when writing or updating config to database");
+    println!("Successfully initialized or updated!");
     println!("Please re-execute the program to add/list/remove tasks.");
 
     Ok(())

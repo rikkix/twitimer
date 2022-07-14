@@ -4,7 +4,10 @@ use getopts::HasArg::No;
 use rusqlite::params;
 
 pub fn table_config(conn: &rusqlite::Connection, k: &str, v: &String) -> rusqlite::Result<usize> {
-    conn.execute("INSERT INTO config VALUES (?1, ?2);", params![k, v])
+    conn.execute(
+        "INSERT OR REPLACE INTO config VALUES (?1, ?2);",
+        params![k, v],
+    )
 }
 
 pub fn config(conn: &rusqlite::Connection, conf: &Config) -> rusqlite::Result<()> {

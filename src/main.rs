@@ -126,27 +126,7 @@ fn main() -> Result<(), err::Error> {
             return Ok(());
         }
 
-        // $twitimer init --update
-        if args
-            .value_of("update")
-            .expect("Error when getting the value of flag update")
-        {
-            if !db_exist {
-                println!("No database found at {}", DB_PATH);
-                println!("Use `$ twitimer init` to initialize one");
-                exit(-3)
-            }
-            println!("twitimer init --update is still under development!");
-            // TODO: update
-            return Ok(());
-        }
-
-        if db_exist {
-            println!("database exists!");
-            println!("use `$ twitimer init --update` to upgrade configurations!");
-            exit(-1)
-        }
-        cli::init::handler(&args).expect("Error when running `$ twitimer init`");
+        cli::init::handler(&args, db_exist).expect("Error when running `$ twitimer init`");
         return Ok(());
     }
 

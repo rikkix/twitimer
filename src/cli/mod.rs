@@ -38,7 +38,6 @@ pub fn init_args() -> args::Args {
         PROGRAM_INIT_DESC,
     );
     args.flag("h", "help", "Print the help page");
-    args.flag("u", "update", "Update credentials");
     args.flag("s", "silent", "Select all y/n choices as default");
     args.option(
         "",
