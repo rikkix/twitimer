@@ -65,7 +65,7 @@ const PROGRAM_LIST_DESC: &str = "List your twitimer task(s)";
 const PROGRAM_REMOVE_DESC: &str = "Remove your twitimer task(s)";
 const PROGRAM_CRON_DESC: &str = "Check for actions";
 
-const TWITIMER_VER: &str = "v0.0.1(dev)";
+const TWITIMER_VER: &str = "v0.0.1(beta)";
 
 fn main() -> Result<(), err::Error> {
     let program_args: Vec<String> = env::args().collect();
