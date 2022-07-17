@@ -11,7 +11,6 @@ use chrono::Utc;
 use std::env;
 use std::process::exit;
 
-use crate::err::Error;
 use prettytable::{cell, row};
 use serde::{Deserialize, Serialize};
 use twitter::Credential;

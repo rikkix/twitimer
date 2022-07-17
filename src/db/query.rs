@@ -1,7 +1,7 @@
 use crate::twitter::Credential;
 use crate::utils::time::SqlTimestamp;
 use crate::version::Version;
-use crate::{Config, Error, Twitimer};
+use crate::{err, Config, Twitimer};
 use chrono::{TimeZone, Utc};
 use itertools::Itertools;
 use rusqlite::{params, Rows};
@@ -11,7 +11,7 @@ pub fn table_config(conn: &rusqlite::Connection, key: &str) -> rusqlite::Result<
     stmt.query_row(params![key], |row| Ok(row.get(0)))?
 }
 
-pub fn config(conn: &rusqlite::Connection) -> Result<Config, Error> {
+pub fn config(conn: &rusqlite::Connection) -> Result<Config, err::Error> {
     let cred = Credential {
         consumer_key: table_config(conn, "consumer_key")?,
         consumer_secret: table_config(conn, "consumer_secret")?,

@@ -1,8 +1,8 @@
 use crate::twitter::CredentialOpt;
 use crate::utils::stdiotools::{ask_correct, clear_terminal, yes_or_no};
-use crate::{db, version, Config, Error, TWITIMER_VER};
+use crate::{db, err, version, Config, TWITIMER_VER};
 
-pub fn handler(args: &args::Args, exist: bool) -> Result<(), Error> {
+pub fn handler(args: &args::Args, exist: bool) -> Result<(), err::Error> {
     let silent = args
         .value_of("silent")
         .expect("Error when getting value of program argument silent");
