@@ -17,7 +17,7 @@ Please build it yourself and carefully adapt the instructions below if your syst
 ### Download and add to PATH
 #### Linux amd64
 ```shell
-$ sudo wget 'https://github.com/iochen/twitimer/releases/download/v0.0.1(release)/twitimer' -O /usr/bin/twitimer
+$ sudo wget 'https://github.com/iochen/twitimer/releases/download/v0.1.0/twitimer' -O /usr/bin/twitimer
 $ sudo chmod +x /usr/bin/twitimer
 ```
 #### Other architectures
