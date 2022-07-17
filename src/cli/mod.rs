@@ -22,8 +22,8 @@ pub fn print_help() {
     \t\t$ twitimer new --help
     \tList your twitimer task(s)
     \t\t$ twitimer list --help
-    \tEdit your twitimer task
-    \t\t$ twitimer edit --help
+    \tRemove your twitimer task(s)
+    \t\t$ twitimer remove --help
     \tCheck for actions
     \t\t$ twitimer cron --help\n",
         TWITIMER_VER,
