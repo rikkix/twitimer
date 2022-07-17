@@ -4,7 +4,7 @@ pub mod list;
 pub mod new;
 pub mod remove;
 
-use crate::{utils, PROGRAM_CRON_DESC, PROGRAM_REMOVE_DESC, TWITIMER_VER};
+use crate::{db, utils, PROGRAM_CRON_DESC, PROGRAM_REMOVE_DESC, TWITIMER_VER};
 use crate::{PROGRAM_INIT_DESC, PROGRAM_LIST_DESC, PROGRAM_NAME, PROGRAM_NEW_DESC};
 use args;
 use getopts::Occur;
@@ -12,7 +12,7 @@ use getopts::Occur;
 pub fn print_help() {
     println!(
         "
-    Twitimer {} by Richard Chen (i@iochen.com) 2022\n
+    Twitimer {} by Richard Chen 2022 (DB: {})\n
     Usage: 
     \tShow this page:
     \t\t$ twitimer help
@@ -26,7 +26,8 @@ pub fn print_help() {
     \t\t$ twitimer edit --help
     \tCheck for actions
     \t\t$ twitimer cron --help\n",
-        TWITIMER_VER
+        TWITIMER_VER,
+        db::db_path()
     )
 }
 
