@@ -12,7 +12,12 @@ pub fn db_path() -> String {
     let s = env::var("TWITIMER_DB");
     match s {
         Ok(str) => str,
-        Err(_) => "twitimer.db".to_string(),
+        Err(_) => dirs::home_dir()
+            .expect("Error getting home dir")
+            .join(path::Path::new(".twitimer.db"))
+            .into_os_string()
+            .into_string()
+            .expect("Error when unwrapping OsString"),
     }
 }
 
