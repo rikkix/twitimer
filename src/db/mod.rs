@@ -1,6 +1,6 @@
 use crate::db::query::config;
 use rusqlite;
-use std::path;
+use std::{env, path};
 
 pub mod init;
 pub mod insert;
@@ -8,20 +8,20 @@ pub mod query;
 pub mod remove;
 pub mod update;
 
-pub const DB_PATH: &str = {
-    let s = option_env!("TWITIMER_DB");
+pub fn db_path() -> String {
+    let s = env::var("TWITIMER_DB");
     match s {
-        Some(str) => str,
-        None => "twitimer.db",
+        Ok(str) => str,
+        Err(_) => "twitimer.db".to_string(),
     }
-};
+}
 
 pub fn new_conn() -> Result<rusqlite::Connection, rusqlite::Error> {
-    rusqlite::Connection::open(DB_PATH)
+    rusqlite::Connection::open(db_path())
 }
 
 pub fn exist() -> bool {
-    path::Path::new(DB_PATH).is_file()
+    path::Path::new(db_path().as_str()).is_file()
 }
 
 pub fn check_available() -> bool {

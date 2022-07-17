@@ -103,7 +103,7 @@ fn main() -> Result<(), err::Error> {
     if db_exist && !db_available {
         println!("db exists but not available!");
         println!("please remove it manually and use `$ twitimer init` to create a new one!");
-        println!("db path: {}", db::DB_PATH);
+        println!("db path: {}", db::db_path());
         exit(-2)
     }
 
