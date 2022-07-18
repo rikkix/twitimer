@@ -51,6 +51,13 @@ pub fn handler(args: &args::Args, exist: bool) -> Result<(), err::Error> {
     let conn = db::new_conn().expect("Error when creating a new database");
     if !exist {
         db::init::structure(&conn).expect("Error when initialize database structure");
+    } else {
+        let conf = db::query::config(&conn).expect("Error querying config from database");
+
+        version::compatibility::compatible(
+            &version::Version::from(TWITIMER_VER).expect("Error with current twitimer version"),
+            &conf.version,
+        )?;
     }
 
     let conf = Config {

@@ -64,7 +64,7 @@ const PROGRAM_LIST_DESC: &str = "List your twitimer task(s)";
 const PROGRAM_REMOVE_DESC: &str = "Remove your twitimer task(s)";
 const PROGRAM_CRON_DESC: &str = "Check for actions";
 
-const TWITIMER_VER: &str = "v0.1.0(release)";
+const TWITIMER_VER: &str = "v0.1.1(dev)";
 
 fn main() -> Result<(), err::Error> {
     let program_args: Vec<String> = env::args().collect();
@@ -132,6 +132,12 @@ fn main() -> Result<(), err::Error> {
     }
 
     let conn = db::new_conn().expect("Error when establish connection to database");
+    let conf = db::query::config(&conn).expect("Error querying config from database");
+
+    version::compatibility::compatible(
+        &version::Version::from(TWITIMER_VER).expect("Error with current twitimer version"),
+        &conf.version,
+    )?;
 
     // $ twitimer new
     if program_args[1].eq("new") {

@@ -1,3 +1,5 @@
+pub mod compatibility;
+
 use regex::Regex;
 
 #[derive(Clone, Debug)]
