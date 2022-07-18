@@ -48,7 +48,7 @@ pub type VersionStore = u32;
 impl Version {
     pub fn from(s: &str) -> Option<Version> {
         let s = s.trim();
-        let r = Regex::new(r"v(\d+)\.(\d+)\.(\d+)\s?(?:(?:\((\w+)\))|(?:\-\s?(\w+)))");
+        let r = Regex::new(r"v(\d+)\.(\d+)\.(\d+)\s?(?:\((\w+)\)|-\s?(\w+))");
         let r = r.expect("Error when creating a new regex pattern");
         let cap = r.captures(s);
         if cap.is_none() {
