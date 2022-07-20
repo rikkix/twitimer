@@ -1,3 +1,5 @@
+pub mod media;
+
 use crate::err;
 use egg_mode::KeyPair;
 

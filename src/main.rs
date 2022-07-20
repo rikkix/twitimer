@@ -4,7 +4,6 @@ mod cli;
 mod db;
 mod err;
 mod file;
-mod media;
 mod twitter;
 mod utils;
 mod version;

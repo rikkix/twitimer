@@ -25,7 +25,7 @@ impl From<rusqlite::Error> for Error {
 impl From<ParseIntError> for Error {
     fn from(e: ParseIntError) -> Error {
         Error {
-            code: Some(10),
+            code: Some(17),
             msg: e.to_string(),
         }
     }
@@ -45,6 +45,24 @@ impl fmt::Display for Error {
         match self.code {
             Some(c) => write!(f, "Error: {}. (Code: {})", self.msg, c),
             None => write!(f, "Error: {}.", self.msg),
+        }
+    }
+}
+
+impl From<std::io::Error> for Error {
+    fn from(e: std::io::Error) -> Self {
+        Error {
+            code: Some(4),
+            msg: e.to_string(),
+        }
+    }
+}
+
+impl From<s3::error::S3Error> for Error {
+    fn from(e: s3::error::S3Error) -> Self {
+        Error {
+            code: Some(71),
+            msg: e.to_string(),
         }
     }
 }

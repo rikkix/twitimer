@@ -6,24 +6,23 @@ pub struct LocalFile<'a> {
     mime: Option<mime::Mime>,
 }
 
-impl LocalFile {
+impl LocalFile<'_> {
     pub fn new(path: &str) -> Result<LocalFile, err::Error> {
         let opt_type = infer::get_from_path(path)?;
-        let mut m: Option<mime::Mime> = None;
-        if opt_type.is_some() {
-            m = opt_type.unwrap().mime_type().parse()?;
-        }
-
         Ok(LocalFile {
             path: path::Path::new(path),
-            mime: m,
+            mime: opt_type.map(|t| {
+                t.mime_type()
+                    .parse::<mime::Mime>()
+                    .expect("Error when parsing mime type")
+            }),
         })
     }
 }
 
-impl super::File for LocalFile {
+impl super::File for LocalFile<'_> {
     fn data(&self) -> Result<Vec<u8>, err::Error> {
-        Ok(fs::read(self.path)?)
+        Ok(fs::read(self.path)?.to_vec())
     }
     fn mime(&self) -> Option<mime::Mime> {
         self.mime.clone()
