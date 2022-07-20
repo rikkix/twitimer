@@ -3,6 +3,8 @@ extern crate core;
 mod cli;
 mod db;
 mod err;
+mod file;
+mod media;
 mod twitter;
 mod utils;
 mod version;
@@ -64,7 +66,7 @@ const PROGRAM_LIST_DESC: &str = "List your twitimer task(s)";
 const PROGRAM_REMOVE_DESC: &str = "Remove your twitimer task(s)";
 const PROGRAM_CRON_DESC: &str = "Check for actions";
 
-const TWITIMER_VER: &str = "v0.1.1(dev)";
+const TWITIMER_VER: &str = "v1.0.0(dev)";
 
 fn main() -> Result<(), err::Error> {
     let program_args: Vec<String> = env::args().collect();
